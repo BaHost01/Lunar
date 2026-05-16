@@ -23,6 +23,7 @@ echo "📋 Copying binaries and configuration..."
 cp bin/Release/net9.0/$PROJECT_NAME.dll $RELEASE_DIR/
 cp bin/Release/net9.0/MoonSharp.Interpreter.dll $DEPENDS_DIR/
 cp bin/Release/net9.0/Spectre.Console*.dll $DEPENDS_DIR/
+cp bin/Release/net9.0/Raylib-cs.dll $DEPENDS_DIR/
 cp version.json $RELEASE_DIR/
 
 # 4. Copy documentation

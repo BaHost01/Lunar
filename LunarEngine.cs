@@ -51,6 +51,7 @@ public class LunarEngine
     {
         _script = script;
         InitializeSecureFileSystem();
+        LunarRenderer.Register(_script);
         RegisterBuiltins();
         LoadBuiltinScripts();
         TryLoadCache();
