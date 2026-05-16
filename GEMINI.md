@@ -13,9 +13,11 @@ The system is divided into:
 2.  **LunarEngine.cs**: Core engine logic, handling bytecode serialization and thread management.
 
 ### Features
+- **Auto-Update**: Built-in GitHub-based version checking and binary synchronization.
+- **Guardian Sandbox**: Isolated execution for high-privilege scripts via TCP.
+- **Debug CLI**: Interactive control panel available in debug builds for real-time engine manipulation.
 - **Custom Bytecode (.lbc)**: Encapsulated Lua bytecode with SHA256 integrity checks and magic headers.
 - **Thread Monitor**: Real-time tracking of Lua coroutines.
-- **Extended Globals**: Custom C# functions (`warn`, `spawn`, `clamp`, etc.) exposed to Lua.
 
 ## Building and Running
 

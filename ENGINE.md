@@ -23,16 +23,28 @@ Cooperative multitasking via `spawn(fn)`.
 ## 🛡️ Advanced Security Layer
 
 ### 1. Mandatory Secure Bootloader
-The `LunarAPI.Start()` function is now an **awaitable bootloader**.
-- **Update Check**: Upon execution, it performs a mandatory version check and DLL integrity sync.
-- **Blocking**: The game will not initialize until the bootloader verifies the environment is secure and up-to-date.
+The `LunarAPI.Start()` function is an **awaitable bootloader**.
+- **Update Check**: Upon execution, it performs a mandatory version check against `version.json` hosted on GitHub.
+- **Auto-Update**: If a newer version is found, it downloads the updated `Lunar.dll.new` automatically.
+- **Blocking**: The game will not initialize until the bootloader verifies the environment is secure and synchronized.
 
 ### 2. Isolated Guardian Sandbox
-`GameScript` logic is now executed in the **Guardian Sandbox**, a randomized execution context.
-- **Randomized Identity**: Every sandbox instance has a unique, randomized identity (e.g., `G_a4b2...`).
-- **String Obfuscation**: The sandbox environment is injected with hundreds of randomized strings (`ptr_...`) to mislead memory scanners and string-based dumping tools.
-- **TCP Coordination**: Communication between the main DLL and the Guardian Sandbox happens over a secure local TCP bridge (Port 5556).
-- **Out-of-Memory Logic**: High-privilege game logic is isolated from the main game process memory, making it immune to standard memory read/write exploits.
+`GameScript` logic is executed in the **Guardian Sandbox**, an isolated execution context.
+- **TCP Coordination**: Communication happens over a secure local TCP bridge (Default Port 5556).
+- **Memory Noise**: Injects randomized strings to obfuscate memory scanning.
+
+---
+
+## 🛠 Debug & Management
+
+### 1. CLI Control Panel (Debug Builds Only)
+When compiled in `DEBUG` mode, Lunar provides an interactive control panel.
+- **threads**: Displays real-time status of all managed Lua coroutines.
+- **cls**: Clears the console.
+- **[Lua Code]**: Any other input is executed directly as high-privilege Lua.
+
+### 2. TCP Management
+A management interface is available on Port 5555 for external tools to interact with the engine.
 
 ### 3. Anti-Tamper Bytecode Size Check
 - **Bytecode Enforcement**: Memory-bound scripts (`LocalScript`, `ModuleScript`) must match their original compiled size exactly.
