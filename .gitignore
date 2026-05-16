@@ -1,0 +1,13 @@
+# .NET
+bin/
+obj/
+
+# Release
+release/
+*.zip
+*.tar.gz
+
+# User settings
+*.user
+lunar_cache.json
+Lua/ApplicationLogic.yml
