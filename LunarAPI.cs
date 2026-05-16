@@ -26,11 +26,18 @@ public static class LunarAPI
     public static async Task Start(int port = 5555)
     {
         AnsiConsole.Clear();
-        AnsiConsole.Write(new FigletText("LUNAR").Color(Color.Blue));
+        
+        // Default Lua Logo
+        AnsiConsole.MarkupLine("[blue]        _______ [/]");
+        AnsiConsole.MarkupLine("[blue]       /      / [/]");
+        AnsiConsole.MarkupLine("[blue]  ____/      /  [/]");
+        AnsiConsole.MarkupLine("[blue] /          /   [/]");
+        AnsiConsole.MarkupLine("[blue]/__________/    [/]");
+        AnsiConsole.MarkupLine("[bold white]      LUA       [/]");
+        
         AnsiConsole.Write(new Rule("[blue]Secure Bootloader[/] [grey]v" + VERSION + "[/]").RuleStyle("grey"));
         AnsiConsole.WriteLine();
 
-        // 1. Mandatory Update Check
         try 
         {
             await CheckForUpdates();
@@ -43,26 +50,52 @@ public static class LunarAPI
         AnsiConsole.MarkupLine("[green]✓ Bootloader sequence complete. Initializing Engine...[/]");
         await Task.Delay(1000);
 
-        // 2. Initialize Engine
         var script = new Script();
         _engine = new LunarEngine(script);
 
-        // 3. Start Guardian Sandbox (Separate context)
         _ = Task.Run(() => GuardianSandbox.StartListener(port + 1));
 
-        // 4. Start Management Interface
         _isRunning = true;
         _listener = new TcpListener(IPAddress.Loopback, port);
         _listener.Start();
 
         AnsiConsole.MarkupLine($"[grey]TCP Management opened on port {port}.[/]");
+
+#if DEBUG
+        AnsiConsole.MarkupLine("[bold cyan]>> DEBUG MODE ACTIVE: Control Panel Enabled[/]");
+        _ = Task.Run(() => RunControlPanel());
+#else
         AnsiConsole.MarkupLine("[yellow]Terminal hiding in 3 seconds...[/]");
         await Task.Delay(3000);
         AnsiConsole.Clear();
+#endif
 
         _ = Task.Run(AcceptClientsAsync);
 
         while (_isRunning) { await Task.Delay(1000); }
+    }
+
+    private static void RunControlPanel()
+    {
+        while (_isRunning)
+        {
+            var cmd = AnsiConsole.Ask<string>("[bold yellow]LUNAR DEBUG>[/]");
+            if (string.IsNullOrEmpty(cmd)) continue;
+
+            if (cmd == "exit") { _isRunning = false; break; }
+            if (cmd == "cls") { AnsiConsole.Clear(); continue; }
+            if (cmd == "threads") { _engine?.MonitorThreads(); continue; }
+            
+            try 
+            {
+                _engine?.DoString(cmd, "Debug_CLI");
+                AnsiConsole.MarkupLine("[green]✓ Executed.[/]");
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[red]!! Error:[/] {Markup.Escape(ex.Message)}");
+            }
+        }
     }
 
     private static async Task CheckForUpdates()

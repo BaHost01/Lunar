@@ -69,7 +69,7 @@ public class LunarEngine
             string noise = Convert.ToBase64String(RandomNumberGenerator.GetBytes(128));
             string ymlContent = $"# LUNAR SECURE CONFIG\nFunctions: [Compile, Set, Run]\nRequireBypass: {_bypassToken}\n_Noise: {noise}";
             File.WriteAllText(ymlPath, CryptoUtils.Encrypt(ymlContent));
-            AnsiConsole.MarkupLine("[bold green]>> Security Layer Initialized (Encrypted Config Generated)[/]");
+            AnsiConsole.MarkupLine("[bold green]>> Security Layer Initialized[/]");
         }
         else
         {
@@ -77,7 +77,7 @@ public class LunarEngine
                 string decrypted = CryptoUtils.Decrypt(File.ReadAllText(ymlPath));
                 if (decrypted.Contains("RequireBypass: "))
                     _bypassToken = decrypted.Split("RequireBypass: ")[1].Split("\n")[0].Trim();
-            } catch { AnsiConsole.MarkupLine("[red]!! Security Compromised: Failed to decrypt ApplicationLogic.yml[/]"); }
+            } catch { AnsiConsole.MarkupLine("[red]!! Security Compromised[/]"); }
         }
 
         AutoCompileScripts();
