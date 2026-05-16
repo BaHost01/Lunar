@@ -24,6 +24,8 @@ cp bin/Release/net9.0/$PROJECT_NAME.dll $RELEASE_DIR/
 cp bin/Release/net9.0/MoonSharp.Interpreter.dll $DEPENDS_DIR/
 cp bin/Release/net9.0/Spectre.Console*.dll $DEPENDS_DIR/
 cp bin/Release/net9.0/Raylib-cs.dll $DEPENDS_DIR/
+# Copy native raylib dependencies (runtimes)
+cp -r bin/Release/net9.0/runtimes $DEPENDS_DIR/ 2>/dev/null || true
 cp version.json $RELEASE_DIR/
 
 # 4. Copy documentation

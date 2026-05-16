@@ -35,16 +35,35 @@ The `LunarAPI.Start()` function is an **awaitable bootloader**.
 
 ---
 
-## 🛠 Debug & Management
+## 🎨 3D Rendering (Raylib-cs)
+Lunar now includes a built-in 3D rendering bridge via the `renderer` global.
 
-### 1. CLI Control Panel (Debug Builds Only)
-When compiled in `DEBUG` mode, Lunar provides an interactive control panel.
-- **threads**: Displays real-time status of all managed Lua coroutines.
-- **cls**: Clears the console.
-- **[Lua Code]**: Any other input is executed directly as high-privilege Lua.
+### Functions
+- `renderer.init(width, height, title)`: Opens a new 3D window.
+- `renderer.beginDraw()`: Starts the 3D frame.
+- `renderer.endDraw()`: Finalizes the frame and draws to screen.
+- `renderer.drawCube(x, y, z, w, h, d, color)`: Renders a 3D cube.
+- `renderer.drawGrid(slices, spacing)`: Renders a coordinate grid.
+- `renderer.shouldClose()`: Returns true if the window should close.
 
-### 2. TCP Management
-A management interface is available on Port 5555 for external tools to interact with the engine.
+### Example
+```lua
+renderer.init(800, 600, "Lunar 3D")
+while not renderer.shouldClose() do
+    renderer.beginDraw()
+    renderer.drawGrid(10, 1.0)
+    renderer.drawCube(0, 0, 0, 2, 2, 2, "gold")
+    renderer.endDraw()
+end
+```
+
+---
+
+## 🚀 CI/CD & Deployment
+Lunar uses **GitHub Actions** for automated builds.
+- **Workflow**: `.github/workflows/build.yml`
+- **Artifacts**: Every push generates a `Lunar_Release.zip` containing the DLL and dependencies.
+- **Releases**: Tagging a commit with `v*` (e.g., `v1.2.6`) automatically creates a GitHub Release.
 
 ### 3. Anti-Tamper Bytecode Size Check
 - **Bytecode Enforcement**: Memory-bound scripts (`LocalScript`, `ModuleScript`) must match their original compiled size exactly.
